@@ -1,4 +1,4 @@
-# #!/usr/bin/env python3
+#!/usr/bin/env python3
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -33,16 +33,16 @@ fig, axs = plt.subplots(3, 2, figsize=(10, 10))
 
 # Plot 1
 axs[0, 0].plot(x0, y0, color="red")
-axs[0, 0].set_title("Plot 1", fontsize="x-small")
+axs[0, 0].set_title("", fontsize="x-small")
 
 # Plot 2
 axs[0, 1].scatter(x1, y1, s=8, c="purple")
-axs[0, 1].set_title("Plot 2", fontsize="x-small")
+axs[0, 1].set_title("Men's Height vs Weight", fontsize="x-small")
 
 # Plot 3
 axs[1, 0].plot(x2, y2)
 axs[1, 0].set_yscale("log")
-axs[1, 0].set_title("Plot 3", fontsize="x-small")
+axs[1, 0].set_title("Exponential Decay of C-14", fontsize="x-small")
 
 # Plot 4
 axs[1, 1].plot(x3, y31, c="red", linestyle="--", label="C-14")
@@ -50,7 +50,7 @@ axs[1, 1].plot(x3, y32, c="green", label="Ra-226")
 axs[1, 1].set_xlim(0, 20000)
 axs[1, 1].set_ylim(0, 1)
 axs[1, 1].legend()
-axs[1, 1].set_title("Plot 4", fontsize="x-small")
+axs[1, 1].set_title("Exponential Decay of Radioactive Elements", fontsize="x-small")
 
 # Plot 5
 bins = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
@@ -58,7 +58,7 @@ axs[2, 0].hist(student_grades, bins=bins, edgecolor="black")
 axs[2, 0].set_xlim(0, 100)
 axs[2, 0].set_ylim(0, 30)
 axs[2, 0].set_xticks(bins)
-axs[2, 0].set_title("Plot 5", fontsize="x-small")
+axs[2, 0].set_title("Project A", fontsize="x-small")
 
 # Hide empty subplot
 axs[2, 1].axis('off')
