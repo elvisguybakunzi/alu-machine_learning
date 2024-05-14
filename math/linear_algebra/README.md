@@ -34,6 +34,44 @@ Matrix multiplication is a binary operation that produces a new matrix from two 
 ## NumPy
 NumPy is a Python library for numerical computing. It provides support for arrays, matrices, and a wide range of mathematical functions, making it suitable for scientific and engineering applications.
 
+### Example
+
+```python
+
+import numpy as np
+
+# Create a 1D array (vector)
+vector = np.array([1, 2, 3, 4, 5])
+print("Vector:")
+print(vector)
+
+# Create a 2D array (matrix)
+matrix = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+print("\nMatrix:")
+print(matrix)
+
+# Accessing elements
+print("\nElement at row 0, column 1 of the matrix:", matrix[0, 1])
+
+# Basic operations
+print("\nElement-wise addition:")
+print(vector + 10)
+
+print("\nElement-wise multiplication:")
+print(matrix * 2)
+
+# Linear algebra operations
+print("\nMatrix multiplication:")
+result = np.dot(matrix, vector)
+print(result)
+
+# Random number generation
+random_array = np.random.rand(3, 3)  # Create a 3x3 array of random numbers between 0 and 1
+print("\nRandom array:")
+print(random_array)
+
+```
+
 ## Parallelization
 Parallelization is the process of splitting a task into smaller parts and executing them simultaneously on multiple processing units (e.g., CPU cores, GPUs). It can significantly reduce computation time and improve efficiency, especially for computationally intensive tasks.
 
