@@ -4,6 +4,7 @@ This Python script is used to calculate shape of matrix.
 
 """
 
+
 def matrix_shape(matrix):
 
     """
