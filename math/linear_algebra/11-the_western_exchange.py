@@ -8,15 +8,13 @@ This script transposes matrix
 
 def np_transpose(matrix):
     """
-    Transpose a matrix.
+    Transposes a numpy.ndarray.
 
     Args:
-        matrix (list): The input matrix.
+        matrix: A numpy.ndarray.
 
     Returns:
-        list: The transposed matrix.
+        A new numpy.ndarray which is the transpose of the input matrix.
     """
-    if not matrix:
-        return []
-
-    return [list(row) for row in zip(*matrix)]
+    # Return the transpose of the input matrix
+    return matrix.transpose()
