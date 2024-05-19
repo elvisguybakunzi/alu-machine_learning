@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
 
-def np_shape(matrix):
-    """Calculate the shape of a nested list simulating a numpy.ndarray."""
-    def shape_rec(mat, shape=[]):
-        shape.append(len(mat))
-        if len(mat) > 0 and isinstance(mat[0], list):
-            return shape_rec(mat[0], shape)
-        return shape
-    
-    return tuple(shape_rec(matrix))
+def np_shape(matrix, depth=0):
+    """Calculate the shape of a numpy.ndarray."""
+    return (not isinstance(matrix, list) and () or
+            (depth == 0 and (len(matrix),) or
+             (len(matrix),) + np_shape(matrix[0], depth + 1)))
