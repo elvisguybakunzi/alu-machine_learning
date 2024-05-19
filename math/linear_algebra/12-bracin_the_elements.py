@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+This script performs mathematical operations
+
+"""
+
 
 def np_elementwise(mat1, mat2):
     """
@@ -10,7 +15,8 @@ def np_elementwise(mat1, mat2):
         mat2 (numpy.ndarray): Second input matrix.
 
     Returns:
-        tuple: Tuple containing the element-wise sum, difference, product, and quotient.
+        tuple: Tuple containing the element-wise
+        sum, difference, product, and quotient.
     """
     add = mat1 + mat2
     sub = mat1 - mat2
