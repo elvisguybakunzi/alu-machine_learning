@@ -6,13 +6,13 @@ This script calculates the shape of numpy.ndarray.
 """
 
 
-import numpy as np
-
-
 def np_shape(matrix):
-    """Calculate the shape of a nested list."""
+    """Calculate the shape of a numpy.ndarray represented as nested lists."""
     shape = []
     while isinstance(matrix, list):
         shape.append(len(matrix))
-        matrix = matrix[0] if matrix else None
+        if len(matrix) > 0:
+            matrix = matrix[0]
+        else:
+            break
     return tuple(shape)
