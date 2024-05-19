@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
 
+"""
+This Script calculate shapes of matrices.
 
-def np_shape(matrix, depth=0):
-    """Calculate the shape of a numpy.ndarray."""
-    return (not isinstance(matrix, list) and () or
-            (depth == 0 and (len(matrix),) or
-             (len(matrix),) + np_shape(matrix[0], depth + 1)))
+"""
+
+
+def np_shape(matrix):
+    """
+    Calculate the shape of a numpy.ndarray.
+
+    Args:
+        matrix (numpy.ndarray): The input matrix.
+
+    Returns:
+        tuple: The shape of the matrix as a tuple of integers.
+    """
+    return matrix.shape
