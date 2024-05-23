@@ -1,38 +1,48 @@
 #!/usr/bin/env python3
+"""
+The Script that calculates the determinant of a square matrix
+
+"""
 
 
 def determinant(matrix):
-    """Calculates the determinant of a square matrix.
+    """
+    Calculates the determinant of a matrix.
 
     Args:
-        matrix: A list of lists representing a square matrix.
+        matrix (list of lists): The matrix whose determinant
+        should be calculated.
 
     Returns:
-        The determinant of the matrix, or 1 for a 0x0 matrix.
+        int or float: The determinant of the matrix.
 
     Raises:
-        TypeError: If the input is not a list of lists.
+        TypeError: If matrix is not a list of lists.
+        ValueError: If matrix is not a square matrix.
+
     """
-
-    if not isinstance(matrix, list):
+    if type(matrix) is not list or len(matrix) == 0:
         raise TypeError("matrix must be a list of lists")
-
-    rows = len(matrix)
-    if rows != len(matrix[0]):
-        raise ValueError("matrix must be a square matrix")
-
-    # Base cases: 0x0 and 1x1 matrices
-    if rows == 0:
-        return 1  # Special case for 0x0 matrix
-    elif rows == 1:
+    if len(matrix) > 0:
+        for i in matrix:
+            if type(i) is not list:
+                raise TypeError("matrix must be a list of lists")
+    if len(matrix) == 1 and len(matrix[0]) == 0:
+        return 1
+    for i in matrix:
+        if len(i) != len(matrix):
+            raise ValueError("matrix must be a square matrix")
+    if len(matrix) == 1 and len(matrix) == 1:
         return matrix[0][0]
-
-    # Recursive case: Use Laplace expansion
-    det = 0
-    for col in range(rows):
-        # Get the minor matrix excluding the first row and current column
-        minor = [[matrix[i][j] for j in range(rows) if j != col] for i in range(1, rows)]
-        sign = (-1) ** col  # Alternate signs for Laplace expansion
-        det += sign * matrix[0][col] * determinant(minor)
-
-    return det
+    if len(matrix) == 2:
+        return ((matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]))
+    det = []
+    for i in range(len(matrix)):
+        mini = [[j for j in matrix[i]] for i in range(1, len(matrix))]
+        for j in range(len(mini)):
+            mini[j].pop(i)
+        if i % 2 == 0:
+            det.append(matrix[0][i] * determinant(mini))
+        if i % 2 == 1:
+            det.append(-1 * matrix[0][i] * determinant(mini))
+    return sum(det)
