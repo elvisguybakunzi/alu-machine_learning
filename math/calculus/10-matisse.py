@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-'''Calculate the derivative of a polynomial '''
+'''Calculate the derivative of a polynomial'''
 
 
 def poly_derivative(poly):
@@ -17,19 +17,17 @@ def poly_derivative(poly):
     if not isinstance(poly, list):
         return None
 
+    for coef in poly:
+        if not isinstance(coef, (int, float)):
+            return None
+
     if len(poly) < 2:
-        return None
+        return [0]
 
     result = []
 
     for i in range(1, len(poly)):
-        if not isinstance(poly[i], (int, float)):
-            return None
-
         new_coeff = i * poly[i]
         result.append(new_coeff)
-
-    if not result:
-        return [0]
 
     return result
