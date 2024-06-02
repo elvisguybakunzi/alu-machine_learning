@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""A Script that calculates a sigma notation"""
+
+
 def summation_i_squared(n):
     """
     Calculate the sum of the squares of the first n natural numbers.
@@ -13,9 +16,6 @@ def summation_i_squared(n):
     if not isinstance(n, int) or n <= 0:
         return None
 
-    def recursive_sum(k):
-        if k == 0:
-            return 0
-        return k**2 + recursive_sum(k - 1)
+    recursive_sum = n * (n + 1) * (2 * n + 1) // 6
 
-    return recursive_sum(n)
+    return recursive_sum
