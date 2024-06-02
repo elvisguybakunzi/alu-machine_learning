@@ -19,8 +19,11 @@ def poly_derivative(poly):
     if not isinstance(poly, list):
         return None
 
-    if len(poly) < 2:
+    if len(poly) == 0:
         return [0]
+
+    elif len(poly) < 2:
+        return None
 
     result = []
 
@@ -29,9 +32,6 @@ def poly_derivative(poly):
             return None
 
         new_coeff = i * poly[i]
-        result.append(new_coeff)
-
-    if result == 0:
-        return [0]
+        result.append(new_coeff)]
 
     return result
