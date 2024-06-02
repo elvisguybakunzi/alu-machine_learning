@@ -18,8 +18,8 @@ def poly_derivative(poly):
         for coef in poly):
          return None
 
-    if len(poly) <= 1:
-        return [0]
+    if len(poly) == 0:
+        return None
 
     derivative = [i * poly[i] for i in range(1, len(poly))]
 
