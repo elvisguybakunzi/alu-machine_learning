@@ -1,28 +1,23 @@
 #!/usr/bin/env python3
-"""This Script calculates the derivatie of
-    of a polynamial.
-"""
+'''Calculate the derivative of a polynomial '''
 
 
 def poly_derivative(poly):
     """
     Calculate the derivative of a polynomial.
 
-    Args:
-    poly (list): A list of coefficients representing a polynomial.
+    Parameters:
+    - poly (list): Coefficients representing a polynomial.
 
     Returns:
-    list: A new list of coefficients representing
-    the derivative of the polynomial.
-    None: If poly is not valid.
+    - list or None: New coefficients representing the
+                    derivative of the polynomial.
+                    Returns None if poly is not valid.
     """
     if not isinstance(poly, list):
         return None
 
-    if len(poly) == 0:
-        return [0]
-
-    elif len(poly) < 2:
+    if len(poly) < 2:
         return None
 
     result = []
@@ -32,6 +27,9 @@ def poly_derivative(poly):
             return None
 
         new_coeff = i * poly[i]
-        result.append(new_coeff)]
+        result.append(new_coeff)
+
+    if not result:
+        return [0]
 
     return result
