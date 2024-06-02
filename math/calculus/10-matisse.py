@@ -22,7 +22,7 @@ def poly_derivative(poly):
     if len(poly) < 2:
         return None
 
-    elif len(poly) <= 1:
+    elif len(poly) == 0:
         return [0]
 
     result = []
