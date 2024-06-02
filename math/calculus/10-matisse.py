@@ -1,33 +1,26 @@
 #!/usr/bin/env python3
-'''Calculate the derivative of a polynomial'''
+'''The Script that calculate the derivative of a polynomial'''
 
 
 def poly_derivative(poly):
     """
     Calculate the derivative of a polynomial.
 
-    Parameters:
-    - poly (list): Coefficients representing a polynomial.
+    Args:
+    poly (list): A list of coefficients representing a polynomial.
 
     Returns:
-    - list or None: New coefficients representing the
-                    derivative of the polynomial.
-                    Returns None if poly is not valid.
+    list: A new list of coefficients representing the 
+    derivative of the polynomial.
+    None: If poly is not valid.
     """
-    if not isinstance(poly, list):
-        return None
+    if not isinstance(poly, list) or not all(isinstance(coef, (int, float)) 
+        for coef in poly):
+         return None
 
-    for coef in poly:
-        if not isinstance(coef, (int, float)):
-            return None
-
-    if len(poly) < 2:
+    if len(poly) <= 1:
         return [0]
 
-    result = []
+    derivative = [i * poly[i] for i in range(1, len(poly))]
 
-    for i in range(1, len(poly)):
-        new_coeff = i * poly[i]
-        result.append(new_coeff)
-
-    return result
+    return derivative if derivative else [0]
