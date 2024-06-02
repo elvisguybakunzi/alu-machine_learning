@@ -22,9 +22,6 @@ def poly_derivative(poly):
     if len(poly) < 2:
         return None
 
-    elif len(poly) == 0:
-        return [0]
-
     result = []
 
     for i in range(1, len(poly)):
@@ -34,7 +31,7 @@ def poly_derivative(poly):
         new_coeff = i * poly[i]
         result.append(new_coeff)
 
-    if not result:
+    if result == 0:
         return [0]
 
     return result
