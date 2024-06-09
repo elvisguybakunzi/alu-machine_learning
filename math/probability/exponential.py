@@ -20,3 +20,14 @@ class Exponential:
                 raise ValueError("data must contain multiple values")
             # Calculate lambtha as the inverse of the mean of the data
             self.lambtha = float(1 / (sum(data) / len(data)))
+
+    def pdf(self, x):
+        """Calculate the PDF for a given time period"""
+        if x < 0:
+            return 0
+        # Calculate e^(-lambtha * x)
+        e = 2.7182818285
+        e_lambtha_x = e ** (-self.lambtha * x)
+        # Calculate PDF
+        pdf = self.lambtha * e_lambtha_x
+        return pdf
