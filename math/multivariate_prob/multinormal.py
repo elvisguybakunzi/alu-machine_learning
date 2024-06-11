@@ -61,12 +61,15 @@ class MultiNormal:
         """
         if not isinstance(x, np.ndarray):
             raise TypeError("x must be a numpy.ndarray")
+
         d = self.mean.shape[0]
         if x.shape != (d, 1):
             raise ValueError("x must have the shape ({}, 1)".format(d))
+
         mean_diff = x - self.mean
         cov_inv = np.linalg.inv(self.cov)
         det_cov = np.linalg.det(self.cov)
+
         numerator = np.exp(-0.5 * (mean_diff.T @ cov_inv @ mean_diff))
         denominator = np.sqrt((2 * np.pi) ** d * det_cov)
 
