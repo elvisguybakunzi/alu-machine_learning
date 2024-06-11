@@ -59,18 +59,18 @@ class MultiNormal:
         Returns:
         float: The value of the PDF
         """
-        if not isinstance(x, np.ndarray):
+        if type(x) is not np.ndarray:
             raise TypeError("x must be a numpy.ndarray")
-
-        d = self.mean.shape[0]
-        if x.shape != (d, 1):
+        d = self.cov.shape[0]
+        if len(x.shape) != 2:
             raise ValueError("x must have the shape ({}, 1)".format(d))
-
-        mean_diff = x - self.mean
-        cov_inv = np.linalg.inv(self.cov)
-        det_cov = np.linalg.det(self.cov)
-
-        numerator = np.exp(-0.5 * (mean_diff.T @ cov_inv @ mean_diff))
-        denominator = np.sqrt((2 * np.pi) ** d * det_cov)
-
-        return float(numerator / denominator)
+        test_d, one = x.shape
+        if test_d != d or one != 1:
+            raise ValueError("x must have the shape ({}, 1)".format(d))
+        det = np.linalg.det(self.cov)
+        inv = np.linalg.inv(self.cov)
+        pdf = 1.0 / np.sqrt(((2 * np.pi) ** d) * det)
+        mult = np.matmul(np.matmul((x - self.mean).T, inv), (x - self.mean))
+        pdf *= np.exp(-0.5 * mult)
+        pdf = pdf[0][0]
+        return pdf
