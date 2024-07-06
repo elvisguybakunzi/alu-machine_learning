@@ -1,5 +1,7 @@
-import numpy as np
+#!/usr/bin/env python3
 """Script that performs convolution with custom padding"""
+
+import numpy as np
 
 
 def convolve_grayscale_padding(images, kernel, padding):
