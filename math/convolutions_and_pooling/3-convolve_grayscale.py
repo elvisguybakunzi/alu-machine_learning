@@ -32,6 +32,7 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
     kh, kw = kernel.shape
     sh, sw = stride
 
+    # Calculate padding
     if padding == 'same':
         ph = (kh - 1) // 2
         pw = (kw - 1) // 2
@@ -62,8 +63,7 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
 
             # Perform element-wise multiplication and sum the results
             output[:, i, j] = np.sum(
-                padded_images[:, i_start:i_end, j_start:j_end] *
-                kernel, axis=(1, 2)
+                padded_images[:, i_start:i_end, j_start:j_end] * kernel, axis=(1, 2)
             )
 
     return output
