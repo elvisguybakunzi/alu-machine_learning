@@ -34,12 +34,14 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
 
     # Calculate padding
     if padding == 'same':
-        ph = (kh - 1) // 2
-        pw = (kw - 1) // 2
+        ph = ((h - 1) * sh + kh - h) // 2
+        pw = ((w - 1) * sw + kw - w) // 2
     elif padding == 'valid':
         ph = pw = 0
-    else:
+    elif isinstance(padding, tuple):
         ph, pw = padding
+    else:
+        raise ValueError("Invalid padding value")
 
     # Pad the images with zeros
     padded_images = np.pad(
@@ -63,7 +65,8 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
 
             # Perform element-wise multiplication and sum the results
             output[:, i, j] = np.sum(
-                padded_images[:, i_start:i_end, j_start:j_end] * kernel, axis=(1, 2)
+                padded_images[:, i_start:i_end, j_start:j_end] *
+                kernel, axis=(1, 2)
             )
 
     return output
