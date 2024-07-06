@@ -49,8 +49,12 @@ def convolve_grayscale(images, kernel, padding='same', stride=(1, 1)):
         )
 
     # Calculate the dimensions of the output
-    output_h = (h + 2 * ph - kh) // sh + 1
-    output_w = (w + 2 * pw - kw) // sw + 1
+    if padding == 'valid':
+        output_h = (h - kh + 1)
+        output_w = (w - kw + 1)
+    else:
+        output_h = (h + 2 * ph - kh) // sh + 1
+        output_w = (w + 2 * pw - kw) // sw + 1
 
     # Initialize the output with zeros
     output = np.zeros((m, output_h, output_w))
