@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
+"""This Script defines a single neuron."""
 
 
 class Neuron:
