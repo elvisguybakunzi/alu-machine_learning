@@ -105,13 +105,21 @@ class Neuron:
         return prediction, cost
 
     def gradient_descent(self, X, Y, A, alpha=0.05):
-        """_summary_
+        """Calculates one pass of gradient descent on the neuron
 
         Args:
-            X (_type_): _description_
-            Y (_type_): _description_
-            A (_type_): _description_
-            alpha (float, optional): _description_. Defaults to 0.05.
+            X (array): is a numpy.ndarray with 
+            shape (nx, m) that contains the input data
+            
+            Y (array):  is a numpy.ndarray with 
+            shape (1, m) that contains the correct
+            labels for the input data
+            
+            A (array): is a numpy.ndarray with
+            shape (1, m) containing the activated
+            output of the neuron for each example
+            
+            alpha (float, optional): is the learning rate Defaults to 0.05.
         """
         m = X.shape[1]
 

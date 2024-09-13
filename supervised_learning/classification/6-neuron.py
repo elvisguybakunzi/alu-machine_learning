@@ -103,3 +103,76 @@ class Neuron:
         cost = self.cost(Y, A)
 
         return prediction, cost
+
+    def gradient_descent(self, X, Y, A, alpha=0.05):
+        """Calculates one pass of gradient descent on the neuron
+
+        Args:
+            X (array): is a numpy.ndarray with
+            shape (nx, m) that contains the input data
+
+            Y (array):  is a numpy.ndarray with
+            shape (1, m) that contains the correct
+            labels for the input data
+
+            A (array): is a numpy.ndarray with
+            shape (1, m) containing the activated
+            output of the neuron for each example
+
+            alpha (float, optional): is the learning rate
+            Defaults to 0.05.
+        """
+        m = X.shape[1]
+
+        # Derivative of cost with respect to Z
+        dZ = A - Y
+
+        # Derivative of cost with respect to W
+        dW = np.matmul(dZ, X.T) / m
+
+        # Derivate of cost with respect to b
+        db = np.sum(dZ) / m
+
+        # Update weights and bias
+        self.__W = self.__W - alpha * dW
+        self.__b = self.__b - alpha * db
+
+    def train(self, X, Y, iterations=5000, alpha=0.05):
+        """Trains the neuron
+
+
+        Args:
+            X (array): is a numpy.ndarray with
+            shape (nx, m) that contains the input data
+
+            Y (array):  is a numpy.ndarray with
+            shape (1, m) that contains the correct
+            labels for the input data
+
+            iterations (int, optional): is the number of
+            iterations to train over
+            Defaults to 5000.
+            alpha (float, optional): is the learning rate
+            Defaults to 0.05.
+        """
+
+        # Validate iterations
+        if not isinstance(iterations, int):
+            raise TypeError("iterations must be an integer")
+        if iterations <= 0:
+            raise ValueError("iterations must be a positive integer")
+
+        # Validate alpha
+        if not isinstance(alpha, float):
+            raise TypeError("alpha must be a float")
+        if alpha <= 0:
+            raise ValueError("alpha must be positive")
+
+        # Train the neuron through iterations
+        for i in range(iterations):
+            A = self.forward_prop(X)
+            self.gradient_descent(X, Y, A, alpha)
+
+        # After training, evaluate the neuron on the training data
+
+        return self.evaluate(X, Y)
