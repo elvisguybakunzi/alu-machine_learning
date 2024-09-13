@@ -8,7 +8,7 @@ import numpy as np
 
 class NeuralNetwork:
     """Defines a neural network with one
-    hidden layer performing binary
+    hidden layer with binary
     classification
     """
     def __init__(self, nx, nodes):
@@ -50,7 +50,7 @@ class NeuralNetwork:
         self.__b2 = np.zeros((1, 1))
         self.__A2 = 0
 
-    # Getter methods for each private attributes
+    # Getter methods of each private attributes
     @property
     def W1(self):
         """Getter of W1"""
