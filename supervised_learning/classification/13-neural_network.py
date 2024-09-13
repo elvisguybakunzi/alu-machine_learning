@@ -86,7 +86,7 @@ class NeuralNetwork:
         return 1 / (1 + np.exp(-z))
 
     def forward_prop(self, X):
-        """Calculates the forward
+        """Calculates the
         propagation of the neural network
 
         Args:
@@ -112,11 +112,11 @@ class NeuralNetwork:
         Args:
             Y (array):  is a numpy.ndarray
             with shape (1, m) that contains
-            the correct labels for the input data
+            the correct labels of the input data
 
             A (array): _description_is a numpy.ndarray
             with shape (1, m) containing the activated
-            output of the neuron for each example
+            output of the neuron of each example
         """
 
         m = Y.shape[1]
@@ -135,11 +135,11 @@ class NeuralNetwork:
             shape (nx, m) that contains the input data
 
             Y (array): is a numpy.ndarray with shape (1, m)
-            that contains the correct labels for
+            that contains the correct labels of
             the input data
         """
 
-        # Perform forward propagation
+        # Calculate propagation
         A1, A2 = self.forward_prop(X)
 
         # Convert probabilities A2 to binary predictions
@@ -160,7 +160,7 @@ class NeuralNetwork:
 
             Y (array): is a numpy.ndarray with
             shape (1, m) that contains the
-            correct labels for the input data
+            correct labels of the input data
 
             A1: is the output of the hidden layer
 
@@ -172,12 +172,12 @@ class NeuralNetwork:
 
         m = X.shape[1]
 
-        # Calculate the gradient for W2 and b2
+        # Calculate the gradient of W2 and b2
         dZ2 = A2 - Y
         dW2 = (1/m) * np.dot(dZ2, A1.T)
         db2 = (1/m) * np.sum(dZ2, axis=1, keepdims=True)
 
-        # Calculate the gradient for W1 and b1
+        # Calculate the gradient of W1 and b1
         dZ1 = np.dot(self.__W2.T, dZ2) * (A1 * (1 - A1))
         dW1 = (1/m) * np.dot(dZ1, X.T)
         db1 = (1/m) * np.sum(dZ1, axis=1, keepdims=True)
