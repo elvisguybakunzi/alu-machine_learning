@@ -47,5 +47,5 @@ class NeuralNetwork:
 
         # Output layer weights, biases, and activation
         self.W2 = np.random.randn(1, nodes)
-        self.b2 = np.zeros((1, 1))
+        self.b2 = 0
         self.A2 = 0
