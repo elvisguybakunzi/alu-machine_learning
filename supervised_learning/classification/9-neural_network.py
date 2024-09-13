@@ -47,7 +47,7 @@ class NeuralNetwork:
 
         # Private attributes Output layer
         self.__W2 = np.random.randn(1, nodes)
-        self.__b2 = np.zeros((1, 1))
+        self.__b2 = 0
         self.__A2 = 0
 
     # Getter methods of each private attributes
