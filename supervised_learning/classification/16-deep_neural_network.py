@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Script that defines a deep neural network
-performing binary classification"""
+with binary classification"""
 
 import numpy as np
 
 
 class DeepNeuralNetwork:
     """defines a deep neural network
-    performing binary classification.
+    with binary classification.
     """
 
     def __init__(self, nx, layers):
