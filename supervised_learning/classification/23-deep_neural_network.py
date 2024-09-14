@@ -3,6 +3,7 @@
 with binary classification"""
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 class DeepNeuralNetwork:
@@ -163,7 +164,7 @@ class DeepNeuralNetwork:
             self.__weights['W' + str(layer)] -= alpha * dW
             self.__weights['b' + str(layer)] -= alpha * db
 
-    def train(self, X, Y, iterations=5000, alpha=0.05):
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
         """Trains the deep neural network"""
 
         # Validate iterations
@@ -177,10 +178,36 @@ class DeepNeuralNetwork:
             raise TypeError("alpha must be a float")
         if alpha <= 0:
             raise ValueError("alpha must be positive")
+        
+        if not isinstance(step, int):
+            raise TypeError("step must be an integer")
+        if step <= 0 or step > iterations:
+            raise ValueError("step must be positive and <= iterations") 
+
+        # to store cost values of plotting
+        costs = []
 
         for i in range(iterations):
             A, cache = self.forward_prop(X)
             self.gradient_descent(Y, cache, alpha)
 
-        # After training
+            if (i % step == 0 or i == iterations - 1):
+                cost = self.cost(Y, A)
+                costs.append((i, cost))
+
+                # print cost if verbose is True
+                if verbose:
+                    print("Cost after {} iterations: {}".format(i, cost))
+
+        # Plot cost graph if graph is True
+        if graph:
+            iterations, cost_values = zip(*costs)
+            plt.plot(iterations, cost_values, 'b-')
+            plt.xlabel("Iteration")
+            plt.ylabel("Cost")
+            plt.title("Training Cost")
+            plt.show()
+
+
+
         return self.evaluate(X, Y)
