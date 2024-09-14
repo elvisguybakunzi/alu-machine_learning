@@ -159,9 +159,7 @@ class DeepNeuralNetwork:
 
             # Update the weights and biases
             self.__weights['W' + str(le)] = W - alpha * dW
-            self.__weights['b' + str(le)] = (
-                    self.__weights['b' + str(le)] - alpha * db
-                )
+            self.__weights['b' + str(le)] = self.__weights['b' + str(le)] - alpha * db
 
             # Prepare dZ of the next iteration
             if le > 1:
