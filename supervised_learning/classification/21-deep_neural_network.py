@@ -43,17 +43,17 @@ class DeepNeuralNetwork:
 
     @property
     def L(self):
-        """Getter for layers"""
+        """Getter of layers"""
         return self.__L
 
     @property
     def cache(self):
-        """Getter for the cache"""
+        """Getter of the cache"""
         return self.__cache
 
     @property
     def weights(self):
-        """Getter for the weights"""
+        """Getter of the weights"""
         return self.__weights
 
     def sigmoid(self, Z):
@@ -61,7 +61,7 @@ class DeepNeuralNetwork:
         return 1 / (1 + np.exp(-Z))
 
     def forward_prop(self, X):
-        """Calculates the forward propagation
+        """Calculates the propagation
         of the neural network
 
         Args:
@@ -90,10 +90,10 @@ class DeepNeuralNetwork:
 
         Args:
             Y (array): is a numpy.ndarray with shape (1, m)
-            that contains the correct labels for the input data
+            that contains the correct labels of the input data
             A (array): is a numpy.ndarray with shape (1, m)
             containing the activated output of the neuron
-            for each example
+            of each example
         """
 
         # number of examples
@@ -113,10 +113,10 @@ class DeepNeuralNetwork:
             X (array): is a numpy.ndarray with shape (nx, m)
             that contains the input data
             Y (array): is a numpy.ndarray with shape (1, m)
-            that contains the correct labels for the input data
+            that contains the correct labels of the input data
         """
 
-        # Forward propagation to get the network output
+        # propagation to get the network output
         A, _ = self.forward_prop(X)
 
         # Prediction: A >= 0.5 is classified as 1, otherwise 0
@@ -129,17 +129,17 @@ class DeepNeuralNetwork:
 
     def sigmoid_derivative(self, A):
         """
-        Derivative of the sigmoid function for backpropagation
+        Derivative of the sigmoid function of backpropagation
         """
         return A * (1 - A)
-    
+
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates one pass of gradient descent
         on the neural network
 
         Args:
             Y (array): is a numpy.ndarray with shape (1, m)
-            that contains the correct labels for
+            that contains the correct labels of
             the input data
             cache (dict): is a dictionary containing
             all the intermediary values of the network
@@ -147,27 +147,18 @@ class DeepNeuralNetwork:
             Defaults to 0.05.
         """
 
-        m = Y.shape[1]  # Number of examples
-        L = self.__L  # Number of layers
-        A_L = cache['A{}'.format(L)]  # Output of the last layer
+        m = Y.shape[1]
+        dZ = cache['A' + str(self.__L)] - Y
 
-        # Initialize dZ of the last layer
-        dZ = A_L - Y
+        for layer in range(self.__L, 0, -1):
+            A_prev = cache['A' + str(layer - 1)]
 
-        # Loop backward through the layers to update weights and biases
-        for le in reversed(range(1, L + 1)):
-            A_prev = cache['A{}'.format(le -1)]  # Activation from the previous layer
-            W = self.__weights['W{}'.format(le)]
-
-            # Compute gradients
             dW = (1 / m) * np.dot(dZ, A_prev.T)
             db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
 
-            # Update weights and biases
-            self.__weights['W{}'.format(le)] -= alpha * dW
-            self.__weights['b{}'.format(le)] -= alpha * db
+            if layer > 1:
+                dA = np.dot(self.__weights['W' + str(layer)].T, dZ)
+                dZ = dA * (A_prev * (1 - A_prev))
 
-            # Compute dZ of the previous layer (if not the first layer)
-            if le > 1:
-                dA_prev = np.dot(W.T, dZ)
-                dZ = dA_prev * self.sigmoid_derivative(cache['A{}'.format(le - 1)])
+            self.__weights['W' + str(layer)] -= alpha * dW
+            self.__weights['b' + str(layer)] -= alpha * db
