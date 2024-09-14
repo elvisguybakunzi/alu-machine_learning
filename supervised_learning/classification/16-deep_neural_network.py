@@ -23,29 +23,18 @@ class DeepNeuralNetwork:
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
-
-        # Check if layers is a list of positive integers
-        if not isinstance(layers, list) or len(layers) == 0:
+        if not isinstance(layers, list) or not layers:
             raise TypeError("layers must be a list of positive integers")
-        if not all(isinstance(layers, int) and layers > 0
-                   for layers in layers):
-            raise ValueError("layers must be a list of positive integers")
+        if not all(isinstance(layer, int) and layer > 0 for layer in layers):
+            raise TypeError("layers must be a list of positive integers")
 
-        # Set public attributes
-
-        # number of layers in the neural network
         self.L = len(layers)
-        # Cache to hold intermediary values
         self.cache = {}
-        # Dictionary to hold weight and biases
         self.weights = {}
 
-        # Initialize weights and biases using He et al. method
-        for le in range(1, self.L + 1):
-            if le == 1:
-                self.weights['W1'] = np.random.randn(
-                  layers[0], nx) * np.sqrt(2 / nx)
-            else:
-                self.weights['W{}'.format(le)] = np.random.randn(
-                  layers[le - 1], layers[le - 2]) * np.sqrt(2 / layers[le - 2])
-            self.weights['b{}'.format(le)] = np .zeros((layers[le - 1], 1))
+        for l in range(1, self.L + 1):
+            layer_size = layers[l - 1]
+            input_size = nx if l == 1 else layers[l - 2]
+            
+            self.weights['W' + str(l)] = np.random.randn(layer_size, input_size) * np.sqrt(2 / input_size)
+            self.weights['b' + str(l)] = np.zeros((layer_size, 1))
