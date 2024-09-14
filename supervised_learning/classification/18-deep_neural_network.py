@@ -55,3 +55,31 @@ class DeepNeuralNetwork:
     def weights(self):
         """Getter for the weights"""
         return self.__weights
+
+    def sigmoid(self, Z):
+        """Sigmoid activation function"""
+        return 1 / (1 + np.exp(-Z))
+
+    def forward_prop(self, X):
+        """Calculates the forward propagation
+        of the neural network
+
+        Args:
+            X (array): is a numpy.ndarray
+            with shape (nx, m) that contains
+            the input data
+        """
+
+        # Input layer stored as A0
+        self.__cache['A0'] = X
+
+        for le in range(1, self.__L + 1):
+            W = self.__weights['W' + str(le)]
+            b = self.__weights['b' + str(le)]
+            A_prev = self.__cache['A' + str(le - 1)]
+
+            Z = np.dot(W, A_prev) + b
+            A = self.sigmoid(Z)
+            self.__cache['A' + str(le)] = A
+
+        return A, self.__cache
