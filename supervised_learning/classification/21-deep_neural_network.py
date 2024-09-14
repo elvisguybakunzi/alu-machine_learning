@@ -127,6 +127,12 @@ class DeepNeuralNetwork:
 
         return prediction, cost
 
+    def sigmoid_derivative(self, A):
+        """
+        Derivative of the sigmoid function for backpropagation
+        """
+        return A * (1 - A)
+    
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates one pass of gradient descent
         on the neural network
@@ -141,30 +147,27 @@ class DeepNeuralNetwork:
             Defaults to 0.05.
         """
 
-        m = Y.shape[1]
-        L = self.__L
-        A_L = cache['A' + str(L)]
+        m = Y.shape[1]  # Number of examples
+        L = self.__L  # Number of layers
+        A_L = cache['A{}'.format(L)]  # Output of the last layer
 
-        # Derivative of the cost with respect to A_L
-        dZ_L = A_L - Y
+        # Initialize dZ for the last layer
+        dZ = A_L - Y
 
-        for le in range(L, 0, -1):
-            A_prev = cache['A' + str(le - 1)]
-            W = self.__weights['W' + str(le)]
-            dZ = dZ_L
+        # Loop backward through the layers to update weights and biases
+        for le in reversed(range(1, L + 1)):
+            A_prev = cache['A{}'.format(le -1)]  # Activation from the previous layer
+            W = self.__weights['W{}'.format(le)]
 
-            # Calculate dW and db of current layer
-            dW = np.dot(dZ, A_prev.T) / m
-            db = np.sum(dZ, axis=1, keepdims=True) / m
+            # Compute gradients
+            dW = (1 / m) * np.dot(dZ, A_prev.T)
+            db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
 
-            # Update the weights and biases
-            self.__weights['W' + str(le)] = W - alpha * dW
-            self.__weights['b' + str(le)] = self.__weights['b' + str(le)] - alpha * db
+            # Update weights and biases
+            self.__weights['W{}'.format(le)] -= alpha * dW
+            self.__weights['b{}'.format(le)] -= alpha * db
 
-            # Prepare dZ of the next iteration
+            # Compute dZ for the previous layer (if not the first layer)
             if le > 1:
-                W_prev = self.__weights['W' + str(le)]
-                dA_prev = np.dot(W_prev.T, dZ)
-
-                # derivative of sigmoid
-                dZ_L = dA_prev * A_prev * (1 - A_prev)
+                dA_prev = np.dot(W.T, dZ)
+                dZ = dA_prev * self.sigmoid_derivative(cache['A{}'.format(le - 1)])
