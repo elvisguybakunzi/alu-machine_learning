@@ -151,7 +151,7 @@ class DeepNeuralNetwork:
         L = self.__L  # Number of layers
         A_L = cache['A{}'.format(L)]  # Output of the last layer
 
-        # Initialize dZ for the last layer
+        # Initialize dZ of the last layer
         dZ = A_L - Y
 
         # Loop backward through the layers to update weights and biases
@@ -167,7 +167,7 @@ class DeepNeuralNetwork:
             self.__weights['W{}'.format(le)] -= alpha * dW
             self.__weights['b{}'.format(le)] -= alpha * db
 
-            # Compute dZ for the previous layer (if not the first layer)
+            # Compute dZ of the previous layer (if not the first layer)
             if le > 1:
                 dA_prev = np.dot(W.T, dZ)
                 dZ = dA_prev * self.sigmoid_derivative(cache['A{}'.format(le - 1)])
