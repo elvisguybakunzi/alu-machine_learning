@@ -170,7 +170,7 @@ class DeepNeuralNetwork:
         if not isinstance(iterations, int):
             raise TypeError("iterations must be an integer")
         if iterations <= 0:
-            raise ValueError("Iterations must be a positive integer")
+            raise ValueError("iterations must be a positive integer")
 
         # Validate alpha
         if not isinstance(alpha, float):
