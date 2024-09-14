@@ -182,9 +182,5 @@ class DeepNeuralNetwork:
             A, cache = self.forward_prop(X)
             self.gradient_descent(Y, cache, alpha)
 
-            if i % 100 == 0:
-                cost = self.cost(Y, A)
-                print("Cost after {} iterations: {}".format(i, cost))
-
         # After training
         return self.evaluate(X, Y)
