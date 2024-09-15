@@ -18,7 +18,8 @@ class DeepNeuralNetwork:
             nx (int): is the number of input features
             layers (list): is a list representing the number
             of nodes in each layer of the network
-            activation (str): the activation function to use in hidden layers
+            activation (str): the activation function to use
+            in hidden layers
         """
 
         if not isinstance(nx, int):
@@ -89,7 +90,6 @@ class DeepNeuralNetwork:
             the input data
         """
 
-        # Input layer stored as A0
         self.__cache['A0'] = X
 
         for le in range(1, self.__L + 1):
@@ -97,17 +97,12 @@ class DeepNeuralNetwork:
             b = self.__weights['b' + str(le)]
             A_prev = self.__cache['A' + str(le - 1)]
 
-            Z = np.dot(W, A_prev) + b
+            Z = np.matmul(W, A_prev) + b
 
-            # Use softmax for the output layer,
-            # chosen activation for hidden layers
             if le == self.__L:
                 A = self.softmax(Z)
             else:
-                if self.__activation == 'sig':
-                    A = self.sigmoid(Z)
-                else:  # tanh
-                    A = self.tanh(Z)
+                A = self.sigmoid(Z) if self.__activation == 'sig' else self.tanh(Z)
 
             self.__cache['A' + str(le)] = A
 
@@ -125,14 +120,9 @@ class DeepNeuralNetwork:
             of each example
         """
 
-        # number of examples
         m = Y.shape[1]
-
-        # Compute cost using categorical cross-entropy
-        # Add a small epsilon to avoid log(0)
         epsilon = 1e-15
-        cost = -(1 / m) * np.sum(Y * np.log(A + epsilon))
-
+        cost = -1 / m * np.sum(Y * np.log(A + epsilon))
         return cost
 
     def evaluate(self, X, Y):
@@ -146,17 +136,10 @@ class DeepNeuralNetwork:
             that contains the correct labels of the input data
         """
 
-        # propagation to get the network output
         A, _ = self.forward_prop(X)
-
-        # Prediction: class with highest probability
-        prediction = np.argmax(A, axis=0)
-        prediction_one_hot = np.eye(Y.shape[0])[prediction].T
-
-        # Calculate the cost
+        prediction = np.eye(Y.shape[0])[np.argmax(A, axis=0)].T
         cost = self.cost(Y, A)
-
-        return prediction_one_hot, cost
+        return prediction, cost
 
     def gradient_descent(self, Y, cache, alpha=0.05):
         """Calculates one pass of gradient descent
@@ -178,15 +161,15 @@ class DeepNeuralNetwork:
         for layer in range(self.__L, 0, -1):
             A_prev = cache['A' + str(layer - 1)]
 
-            dW = (1 / m) * np.dot(dZ, A_prev.T)
-            db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
+            dW = 1 / m * np.matmul(dZ, A_prev.T)
+            db = 1 / m * np.sum(dZ, axis=1, keepdims=True)
 
             if layer > 1:
                 W = self.__weights['W' + str(layer)]
-                dA = np.dot(W.T, dZ)
+                dA = np.matmul(W.T, dZ)
                 A = cache['A' + str(layer - 1)]
                 if self.__activation == 'sig':
-                    dZ = dA * (A * (1 - A))
+                    dZ = dA * A * (1 - A)
                 else:  # tanh
                     dZ = dA * (1 - A ** 2)
 
