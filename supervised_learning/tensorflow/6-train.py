@@ -5,6 +5,22 @@ import tensorflow as tf
 
 
 def train(X_train, Y_train, X_valid, Y_valid, layer_sizes, activations, alpha, iterations, save_path="/tmp/model.ckpt"):
+    """Builds, trains, and saves a neural network classifier.
+    
+    Parameters:
+    - X_train: numpy.ndarray of shape (m, n), containing the training data
+    - Y_train: numpy.ndarray of shape (m, c), containing the training labels
+    - X_valid: numpy.ndarray of shape (m_v, n), containing the validation data
+    - Y_valid: numpy.ndarray of shape (m_v, c), containing the validation labels
+    - layer_sizes: list, number of nodes in each layer of the network
+    - activations: list, activation functions for each layer
+    - alpha: float, learning rate
+    - iterations: int, number of iterations to train over
+    - save_path: string, path to save the model
+    
+    Returns:
+    - The path where the model was saved.
+    """
     # Import required functions
     calculate_accuracy = __import__('3-calculate_accuracy').calculate_accuracy
     calculate_loss = __import__('4-calculate_loss').calculate_loss
