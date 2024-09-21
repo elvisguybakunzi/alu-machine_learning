@@ -2,7 +2,6 @@
 """Training the model"""
 
 import tensorflow as tf
-import numpy as np
 
 
 def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
@@ -27,7 +26,8 @@ def train(X_train, Y_train, X_valid, Y_valid, layer_sizes,
     """
 
     # Import necessary functions
-    create_placeholders = __import__('0-create_placeholders').create_placeholders
+    a = __import__('0-create_placeholders').create_placeholders
+    create_placeholders = a
     forward_prop = __import__('2-forward_prop').forward_prop
     calculate_accuracy = __import__('3-calculate_accuracy').calculate_accuracy
     calculate_loss = __import__('4-calculate_loss').calculate_loss
