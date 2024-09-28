@@ -3,14 +3,20 @@
 import tensorflow as tf
 
 def dropout_create_layer(prev, n, activation, keep_prob):
-    """Creates a layer of a neural network using dropout"""
-    # He initialization for weights
-    initializer = tf.keras.initializers.VarianceScaling(scale=2.0, mode='fan_avg')
+    # Initialize the layer weights using He et al. method
+    initializer = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
     
-    # Define the dense layer with the specified number of nodes
-    layer = tf.layers.Dense(units=n, activation=activation, kernel_initializer=initializer)(prev)
+    # Create the layer
+    layer = tf.layers.dense(inputs=prev, 
+                            units=n, 
+                            activation=None,
+                            kernel_initializer=initializer)
+    
+    # Apply the activation function
+    if activation is not None:
+        layer = activation(layer)
     
     # Apply dropout
-    dropout_layer = tf.nn.dropout(layer, keep_prob=keep_prob)
+    dropout = tf.nn.dropout(layer, keep_prob)
     
-    return dropout_layer
+    return dropout
