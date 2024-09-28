@@ -4,122 +4,100 @@
  learning rate decay, and batch normalization'''
 import numpy as np
 import tensorflow as tf
-def shuffle_data(X, Y):
-    '''args: X, y
-    return: x_shuffle, y_shuffle'''
-    zipped = list(zip(X, Y))
-    np.random.shuffle(zipped)
-    x_shuffle, y_shuffle = zip(*zipped)
-    x_shuffle = np.array(x_shuffle)
-    y_shuffle = np.array(y_shuffle)
-    return x_shuffle, y_shuffle
 
-def calculate_loss(y, y_pred):
-    """
-    Method to calculate the cross-entropy loss
-    of a prediction
-    Args:
-        y: input data type label in a placeholder
-        y_pred: type tensor that contains the DNN prediction
-
-    Returns:
-
-    """
-    loss = tf.losses.softmax_cross_entropy(y, y_pred)
-    return loss
-def calculate_accuracy(y, y_pred):
-    """
-    method to calculate the accuracy of a prediction in a DNN
-    Args:
-        y: input data type label in a placeholder
-        y_pred: type tensor that contains the DNN prediction
-
-    Returns: Prediction accuracy
-
-    """
-    correct_prediction = tf.equal(tf.argmax(y, 1),
-                                  tf.argmax(y_pred, 1))
+def model(Data_train, Data_valid, layers, activations, alpha=0.001, beta1=0.9, beta2=0.999, epsilon=1e-8,
+          decay_rate=1, batch_size=32, epochs=5, save_path='/tmp/model.ckpt'):
+    """Builds, trains, and saves a neural network model in TensorFlow."""
+    X_train, Y_train = Data_train
+    X_valid, Y_valid = Data_valid
+    
+    # Initialize placeholders for input and labels
+    nx = X_train.shape[1]
+    ny = Y_train.shape[1]
+    
+    x = tf.placeholder(tf.float32, shape=[None, nx], name='x')
+    y = tf.placeholder(tf.float32, shape=[None, ny], name='y')
+    
+    # Learning rate placeholder
+    global_step = tf.Variable(0, trainable=False)
+    learning_rate = tf.train.inverse_time_decay(alpha, global_step, 1, decay_rate)
+    
+    # Initialize the model
+    def forward_prop(x):
+        for i in range(len(layers)):
+            if i == 0:
+                layer = tf.layers.dense(x, units=layers[i], activation=None,
+                                        kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+            else:
+                layer = tf.layers.dense(layer, units=layers[i], activation=None,
+                                        kernel_initializer=tf.contrib.layers.variance_scaling_initializer())
+            # Batch normalization
+            layer = tf.layers.batch_normalization(layer)
+            # Apply activation function
+            if activations[i]:
+                layer = activations[i](layer)
+        return layer
+    
+    # Build the graph
+    output = forward_prop(x)
+    
+    # Define the loss function
+    loss = tf.losses.softmax_cross_entropy(onehot_labels=y, logits=output)
+    
+    # Define accuracy
+    correct_prediction = tf.equal(tf.argmax(output, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+    
+    # Define Adam optimizer with momentum (beta1, beta2)
+    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate, beta1=beta1, beta2=beta2, epsilon=epsilon)
+    train_op = optimizer.minimize(loss, global_step=global_step)
+    
+    # Initialize all variables
+    init = tf.global_variables_initializer()
+    
+    # Saver to save the model
+    saver = tf.train.Saver()
+    
+    with tf.Session() as sess:
+        sess.run(init)
+        num_batches = X_train.shape[0] // batch_size
+        if X_train.shape[0] % batch_size != 0:
+            num_batches += 1
+        
+        # Training loop
+        for epoch in range(epochs):
+            X_shuffled, Y_shuffled = shuffle_data(X_train, Y_train)
+            
+            print("After {} epochs:".format(epoch))
+            train_cost, train_accuracy = sess.run([loss, accuracy], feed_dict={x: X_train, y: Y_train})
+            valid_cost, valid_accuracy = sess.run([loss, accuracy], feed_dict={x: X_valid, y: Y_valid})
+            
+            print("\tTraining Cost: {}".format(train_cost))
+            print("\tTraining Accuracy: {}".format(train_accuracy))
+            print("\tValidation Cost: {}".format(valid_cost))
+            print("\tValidation Accuracy: {}".format(valid_accuracy))
+            
+            for batch in range(num_batches):
+                start = batch * batch_size
+                end = start + batch_size
+                X_batch = X_shuffled[start:end]
+                Y_batch = Y_shuffled[start:end]
+                
+                sess.run(train_op, feed_dict={x: X_batch, y: Y_batch})
+                
+                if (batch + 1) % 100 == 0:
+                    step_cost, step_accuracy = sess.run([loss, accuracy], feed_dict={x: X_batch, y: Y_batch})
+                    print("\tStep {}:".format(batch + 1))
+                    print("\t\tCost: {}".format(step_cost))
+                    print("\t\tAccuracy: {}".format(step_accuracy))
+        
+        # Save the model
+        save_path = saver.save(sess, save_path)
+        print("Model saved in path: {}".format(save_path))
+        
+    return save_path
 
-    return accuracy
-def create_layer(prev, n, activation):
-    """
-    method to create a TF layer
-    Args:
-        prev: tensor of the previous layer
-        n: n nodes created
-        activation: activation function
-
-    Returns: Layer created with shape n
-
-    """
-    # Average number of inputs and output connections.
-    initializer = tf.contrib.layers.variance_scaling_initializer(
-        mode='FAN_AVG')
-    layer = tf.layers.Dense(units=n, activation=activation,
-                            kernel_initializer=initializer,
-                            name='layer')
-    return layer(prev)
-def create_batch_norm_layer(prev, n, activation):
-    '''args: prev: is the activated output of the previous layer
-            n: number of nodes in the layer to be created
-            activation: activation function that
-              should be used on the output of the layer
-            returns:tensor of the activated output of the layer'''
-    initializer = tf.contrib.layers.variance_scaling_initializer(
-        mode="FAN_AVG")
-    x = tf.layers.Dense(units=n, activation=None,
-                        kernel_initializer=initializer)
-    x_prev = x(prev)
-    scale = tf.Variable(tf.constant(1.0, shape=[n]), name='gamma')
-    mean, variance = tf.nn.moments(x_prev, axes=[0])
-    offset = tf.Variable(tf.constant(0.0, shape=[n]), name='beta')
-    epsilon = 1e-8
-    normalization = tf.nn.batch_normalization(
-        x_prev, mean, variance, offset, scale, epsilon)
-    return activation(normalization)
-def forward_prop(x, layer_sizes=[], activations=[]):
-    """
-    Forward propagation method using TF
-    Args:
-        x: Input data (placeholder)
-        layer_sizes: type list are the n nodes inside the layers
-        activations: type list with the activation function per layer
-
-    Returns: Prediction of a DNN
-
-    """
-    layer = create_batch_norm_layer(x, layer_sizes[0], activations[0])
-    for i in range(1, len(layer_sizes)):
-        if i != len(layer_sizes) - 1:
-            layer = create_batch_norm_layer(layer,
-                                            layer_sizes[i],
-                                            activations[i])
-        else:
-            layer = create_layer(layer, layer_sizes[i], activations[i])
-    return layer
-def create_Adam_op(loss, alpha, beta1, beta2, epsilon):
-    '''args:loss;loss of the net
-            alpha: learning rate
-            beta1: momentum weight
-            beta2: rmsprop weight
-            return:rmsprop optimization operation'''
-    optimizer = tf.train.AdamOptimizer(
-        alpha, beta1, beta2, epsilon=epsilon).minimize(loss)
-    return optimizer
-def learning_rate_decay(alpha, decay_rate, global_step, decay_step):
-    '''args: alpha: initial learning rate
-            decay_rate: weight to determin the rate of decay
-            global_step: number of passes of gradient descent that have lapsed
-            decay_step: number of passes of gradient descent before decay
-            returns: updated alpha after each update'''
-    return tf.train.inverse_time_decay(
-        learning_rate=alpha,
-        global_step=global_step,
-        decay_steps=decay_step,
-        decay_rate=decay_rate,
-        staircase=True)
-def model(Data_train, Data_valid, layers,
-           activations, alpha=0.001, beta1=0.9,
-             beta2=0.999, epsilon=1e-8, decay_rate=1,
-               batch_size=32, epochs=5, save_path='/tmp/model.ckpt'):
+def shuffle_data(X, Y):
+    """Shuffle the data points in two matrices the same way."""
+    permutation = np.random.permutation(X.shape[0])
+    return X[permutation], Y[permutation]
