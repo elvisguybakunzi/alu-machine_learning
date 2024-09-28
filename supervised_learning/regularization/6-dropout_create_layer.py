@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Create layer"""
 
 import tensorflow as tf
 
