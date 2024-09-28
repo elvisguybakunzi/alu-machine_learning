@@ -24,23 +24,12 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
     The weights and biases are updated in place.
     """
     m = Y.shape[1]
-    
-    # Compute the gradient for the output layer
-    dZ = cache['A{}'.format(L)] - Y
-    dW = (1 / m) * np.dot(dZ, cache['A{}'.format(L-1)].T) + (lambtha / m) * weights['W{}'.format(L)]
-    db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
-    
-    # Update weights and biases for the output layer
-    weights['W{}'.format(L)] -= alpha * dW
-    weights['b{}'.format(L)] -= alpha * db
-    
-    # Compute gradients and update weights for hidden layers
-    for l in range(L-1, 0, -1):
-        dA = np.dot(weights['W{}'.format(l+1)].T, dZ)
-        dZ = np.multiply(dA, 1 - np.power(cache['A{}'.format(l)], 2))
-        dW = (1 / m) * np.dot(dZ, cache['A{}'.format(l-1)].T) + (lambtha / m) * weights['W{}'.format(l)]
-        db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
-        
-        # Update weights and biases
-        weights['W{}'.format(l)] -= alpha * dW
-        weights['b{}'.format(l)] -= alpha * db
+    dz = cache['A' + str(L)] - Y
+    for i in range(L, 0, -1):
+        A = cache['A' + str(i - 1)]
+        W = weights['W' + str(i)]
+        dw = (1 / m) * np.matmul(dz, A.T) + (lambtha / m) * W
+        db = (1 / m) * np.sum(dz, axis=1, keepdims=True)
+        dz = np.matmul(W.T, dz) * (1 - np.square(A))
+        weights['W' + str(i)] = weights['W' + str(i)] - alpha * dw
+        weights['b' + str(i)] = weights['b' + str(i)] - alpha * db

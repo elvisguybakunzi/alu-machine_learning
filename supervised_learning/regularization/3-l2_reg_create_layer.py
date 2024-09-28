@@ -17,16 +17,11 @@ def l2_reg_create_layer(prev, n, activation, lambtha):
     Returns:
     - The output of the new layer
     """
-    # Define the L2 regularizer
-    l2_regularizer = tf.contrib.layers.l2_regularizer(lambtha)
-
-    # Create the layer using Dense, specifying
-    # the L2 regularizer for the kernel
-    layer = tf.layers.Dense(units=n,
-                            activation=activation,
-                            kernel_initializer=tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG"),
-                            kernel_regularizer=l2_regularizer)
-
-    # Return the output of the new layer applied
-    # to the previous layer's output
-    return layer(prev)
+    initializer = tf.contrib.layers.variance_scaling_initializer(
+        mode="FAN_AVG")
+    l2_loss = tf.contrib.layers.l2_regularizer(scale=lambtha)
+    hidden_layer = tf.layers.Dense(units=n, activation=activation,
+                                   kernel_initializer=initializer,
+                                   kernel_regularizer=l2_loss)
+    output = hidden_layer(prev)
+    return output
