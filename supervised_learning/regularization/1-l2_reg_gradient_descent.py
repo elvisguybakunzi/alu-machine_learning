@@ -37,13 +37,10 @@ def l2_reg_gradient_descent(Y, weights, cache, alpha, lambtha, L):
     # Compute gradients and update weights for hidden layers
     for l in range(L-1, 0, -1):
         dA = np.dot(weights['W{}'.format(l+1)].T, dZ)
-        dZ = dA * (1 - np.power(cache['A{}'.format(l)], 2))
+        dZ = np.multiply(dA, 1 - np.power(cache['A{}'.format(l)], 2))
         dW = (1 / m) * np.dot(dZ, cache['A{}'.format(l-1)].T) + (lambtha / m) * weights['W{}'.format(l)]
         db = (1 / m) * np.sum(dZ, axis=1, keepdims=True)
         
         # Update weights and biases
         weights['W{}'.format(l)] -= alpha * dW
         weights['b{}'.format(l)] -= alpha * db
-        
-        # Update dZ for next iteration
-        dZ = dZ
