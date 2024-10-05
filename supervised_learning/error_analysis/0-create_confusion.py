@@ -29,4 +29,4 @@ def create_confusion_matrix(labels, logits):
     # Populate the confusion matrix
     for true, pred in zip(true_classes, predicted_classes):
         confusion[true][pred] += 1
-    return
+    return confusion
