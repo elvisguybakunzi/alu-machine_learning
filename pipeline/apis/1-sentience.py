@@ -21,7 +21,8 @@ def sentientPlanets():
         # Process each species in the current page
         for species in species_list:
             # Check if species is sentient
-            if species.get('designation') == 'sentient' or species.get('classification') == 'sentient':
+            if (species.get('designation') == 'sentient' or
+                    species.get('classification') == 'sentient'):
                 homeworld_url = species.get('homeworld')
 
                 # Only proceed if a homeworld is specified
