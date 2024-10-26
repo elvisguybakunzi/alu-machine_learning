@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+'''Returns the list of ships'''
 import requests
 
 
