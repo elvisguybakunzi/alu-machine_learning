@@ -1,5 +1,6 @@
 # Data Augmentation
 
+
 ## Description
 This project implements various data augmentation techniques using TensorFlow. Data augmentation is a strategy that enables practitioners to significantly increase the diversity of data available for training models, without actually collecting new data. The project includes implementations of common augmentation techniques such as flipping, rotating, shearing, and adjusting brightness and hue of images.
 
@@ -14,7 +15,7 @@ At the end of this project, you will be able to explain:
 ## Requirements
 ### General
 - Allowed editors: `vi`, `vim`, `emacs`
-- Python version: 3.6.12
+- Intended Python version: 3.6.12
 - Operating System: Ubuntu 16.04 LTS
 - Required packages:
   - tensorflow (version 1.15)
