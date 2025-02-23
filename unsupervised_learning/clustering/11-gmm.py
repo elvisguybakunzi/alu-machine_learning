@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
-""" 0x01. Clustering """
+'''
+Calculates the Gaussian Matrix
+'''
+
+
 import sklearn.mixture
 
 
 def gmm(X, k):
     """
-    calculates a GMM from a dataset
-        X is a numpy.ndarray of shape (n, d) containing the dataset
-        k is the number of clusters
-    Returns: pi, m, S, clss, bic
-        pi: is a numpy.ndarray of shape (k,) containing the cluster priors
-        m: is a numpy.ndarray of shape (k, d) containing the centroid means
-        S: is a numpy.ndarray of shape (k, d, d) containing the covariance
-            matrices
-        clss: is a numpy.ndarray of shape (n,) containing the cluster indices
-            for each data point
-        bic: is a numpy.ndarray of shape (kmax - kmin + 1) containing the BIC
-            value for each cluster size tested
+    Calculates a Gaussian Mixture Model (GMM) from a dataset.
+
     """
-    Gmm = sklearn.mixture.GaussianMixture(k)
-    params = Gmm.fit(X)
-    clss = Gmm.predict(X)
-    return (params.weights_, params.means_,
-            params.covariances_, clss, Gmm.bic(X))
+    # Fit the Gaussian Mixture Model to the data
+    gmm_model = sklearn.mixture.GaussianMixture(n_components=k)
+    gmm_model.fit(X)
+
+    # Extract the required parameters
+    pi = gmm_model.weights_
+    m = gmm_model.means_
+    S = gmm_model.covariances_
+    clss = gmm_model.predict(X)
+    bic = gmm_model.bic(X)
+
+    return pi, m, S, clss, bic
